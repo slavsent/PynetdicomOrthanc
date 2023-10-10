@@ -4,7 +4,7 @@ from pathlib import Path
 from pydicom import dcmread
 from pydicom.uid import ImplicitVRLittleEndian
 
-from pynetdicom import AE, VerificationPresentationContexts, build_role, debug_logger, StoragePresentationContexts
+from pynetdicom import AE, VerificationPresentationContexts, StoragePresentationContexts, build_role  # , debug_logge
 from pynetdicom.pdu_primitives import SCP_SCU_RoleSelectionNegotiation
 from pynetdicom.sop_class import (
     PatientRootQueryRetrieveInformationModelFind,
@@ -28,7 +28,7 @@ from pydicom.uid import (
 
     ExplicitVRBigEndian)
 
-debug_logger()
+#debug_logger()
 
 
 def send_dcm(path_img):
@@ -52,6 +52,7 @@ def send_dcm(path_img):
 
     assoc = ae.associate(seIP, sePORT, ext_neg=[role_a, role_b], ae_title='ORTHANC')
     if assoc.is_established:
+        i = 0
         for file in os.listdir(path_img):
             filename = os.fsdecode(file)
             if filename.endswith(".dcm"):
@@ -61,6 +62,7 @@ def send_dcm(path_img):
                 # but may be an empty pydicom Dataset if the peer timed out or
                 # sent an invalid dataset.
                 status = assoc.send_c_store(ds)
+                i += 1
                 if status:
                     # If the storage request succeeded this will be 0x0000
                     print('C-STORE request status: 0x{0:04x}'.format(status.Status))
@@ -69,6 +71,7 @@ def send_dcm(path_img):
 
         # Release the association
         assoc.release()
+    print(f'Передача {i} изображений завершено!')
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ def conv_dcm(path_img, path_jpg):
     # directory_jpg = os.fsdecode(os.fsencode(os.path.dirname(os.path.realpath(__file__)))) + '\\' + path_jpg
     Path(path_img).mkdir(parents=True, exist_ok=True)
     Path(path_jpg).mkdir(parents=True, exist_ok=True)
-
+    j = 0
     for file in os.listdir(path_img):
         filename = os.fsdecode(file)
         if filename.endswith(".dcm"):
@@ -30,9 +30,10 @@ def conv_dcm(path_img, path_jpg):
             final_image = Image.fromarray(scaled_image)
             # final_image.show()
             final_image.save(path_jpg + '\\' + name_file + '.jpg')
-            continue
+            j += 1
         else:
             continue
+    print(f'Конвертация {j} изображений завершена!')
 
 
 if __name__ == '__main__':

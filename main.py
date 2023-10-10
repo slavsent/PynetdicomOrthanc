@@ -60,6 +60,7 @@ def main():
 
 
 if __name__ == '__main__':
-    my_path = os.path.dirname(os.path.realpath(__file__))
-    Path(f"{os.path.dirname(os.path.realpath(__file__))}/dicom_img").mkdir(parents=True, exist_ok=True)
-    print('PyCharm')
+    main()
+    #my_path = os.path.dirname(os.path.realpath(__file__))
+    #Path(f"{os.path.dirname(os.path.realpath(__file__))}/dicom_img").mkdir(parents=True, exist_ok=True)
+    #print('PyCharm')

@@ -7,7 +7,7 @@ from pydicom.uid import ImplicitVRLittleEndian
 from pydicom.dataset import Dataset, FileMetaDataset
 from pynetdicom.presentation import build_context
 
-from pynetdicom import AE, VerificationPresentationContexts, build_role, debug_logger, StoragePresentationContexts, evt
+from pynetdicom import AE, VerificationPresentationContexts, build_role, StoragePresentationContexts, evt #, debug_logger
 from pynetdicom.pdu_primitives import SCP_SCU_RoleSelectionNegotiation
 from pynetdicom.sop_class import (
     PatientRootQueryRetrieveInformationModelFind,
@@ -30,9 +30,9 @@ from pydicom.uid import (
 
 
     ExplicitVRBigEndian)
-from move_dicom import move_dcm
+#from move_dicom import move_dcm
 
-debug_logger()
+#debug_logger()
 
 
 def handle_store(event, directory):
@@ -135,16 +135,29 @@ def read_dcm(directory):
             else:
                 print('Connection timed out, was aborted or received invalid response')
         print('############# FIND ', i)
+        print('Выбранная серия: ', my_ds)
 
         if my_ds:
+            print('Выполнение сохранения изображений выбронной серии')
             responses1 = assoc.send_c_get(my_ds, PatientRootQueryRetrieveInformationModelGet)
             #responses1 = assoc.send_c_get(my_ds, StudyRootQueryRetrieveInformationModelGet)
+            j = 0
             for (status1, identifier1) in responses1:
                 if status1 and identifier1:
                     print('status = ', status1)
                     print('identifier = ', identifier1)
+
+                elif status1:
+                    print('status = ', status1)
+                    j += 1
+                elif identifier1:
+                    print('identifier = ', identifier1)
                 else:
-                    print('no c_get')
+                    print('Получение изображения не получилось!')
+            if j > 0:
+                print(f'Изображения сохранены! Количество - {j-1}')
+            else:
+                print('Получение изображения не получилось!')
 
         assoc.release()
     else:

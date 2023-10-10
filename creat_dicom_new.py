@@ -19,6 +19,7 @@ def create_dcm_new(path_img, path_img_new):
     #directory_new = os.fsdecode(os.fsencode(os.path.dirname(os.path.realpath(__file__)))) + '\\' + path_img_new
     new_study = pydicom.uid.generate_uid()
     new_series = pydicom.uid.generate_uid()
+    i = 0
     for file in os.listdir(path_img):
         filename = os.fsdecode(file)
         if filename.endswith(".dcm"):
@@ -36,8 +37,10 @@ def create_dcm_new(path_img, path_img_new):
             ds.StudyInstanceUID = new_study
             ds.SeriesInstanceUID = new_series
             ds.save_as(path_img_new + '\\' + name_file + '_new.dcm')
+            i += 1
         else:
             continue
+    print(f'процедура переворота на 90 градусов {i} изображений и сохранения в новую серию завершено ')
 
 
 if __name__ == '__main__':
